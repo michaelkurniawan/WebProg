@@ -20,11 +20,11 @@
             opacity: 0;
             transition: opacity 1s ease-in-out;
         }
-        #opening {
+        .opening-transition {
             opacity: 0;
-            transition: opacity 0.5s ease-in;
+            transition: opacity 1s ease-in-out;
         }
-        #opening.show {
+        .opening-transition.show {
             opacity: 1;
         }
         .raleway {
@@ -38,7 +38,11 @@
     </style>
 </head>
 <body class="bg-white min-h-screen flex flex-col" style="background-image: url('/image/bg.png');">
-    <div id="opening" class="flex items-center justify-center h-screen transition-opacity duration-1000 opening-transition">
+    <div id="opening1" class="flex items-center justify-center h-screen transition-opacity duration-1000 opening-transition">
+        <img src="/image/logo/1.png" alt="Logo Kainara" class="w-1/2 h-auto">
+    </div>
+
+    <div id="opening2" class="flex items-center justify-center h-screen transition-opacity duration-1000 opening-transition">
         <div class="flex flex-col items-start text-left relative">
             <p class="text-base text-gray-600 tracking-widest raleway">WE ARE</p>
             <h1 class="text-9xl font-bold tracking-widest storica m-2">KAINARA</h1>
@@ -47,7 +51,6 @@
             </div>
         </div>
     </div>
-
 
     <div id="mainContent" class="hidden flex-1 flex flex-col items-center justify-center p-6">
         <h2 class="text-3xl font-semibold text-gray-700 mb-8 raleway">Meet Our Team!</h2>
@@ -67,33 +70,45 @@
     </div>
     
     
-
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const opening = document.getElementById('opening');
+            const opening1 = document.getElementById('opening1');
+            const opening2 = document.getElementById('opening2');
             const main = document.getElementById('mainContent');
             const skipAnimation = sessionStorage.getItem('skipAnimation') === 'true';
     
             if (skipAnimation) {
                 sessionStorage.removeItem('skipAnimation');
-                opening.classList.add('hidden');
+                opening1.classList.add('hidden');
+                opening2.classList.add('hidden');
                 main.classList.remove('hidden');
             } else {
-                opening.classList.add('show');
+                opening1.classList.add('show');
+
                 setTimeout(() => {
-                    opening.classList.remove('show');
-                    opening.classList.add('fade-out');
+                    opening1.classList.remove('show');
+                    opening1.classList.add('fade-out');
+
                     setTimeout(() => {
-                        opening.classList.add('hidden');
-                        main.classList.remove('hidden');
+                        opening1.classList.add('hidden');
+
+                        opening2.classList.add('show');
+
+                        setTimeout(() => {
+                            opening2.classList.remove('show');
+                            opening2.classList.add('fade-out');
+
+                            setTimeout(() => {
+                                opening2.classList.add('hidden');
+                                main.classList.remove('hidden');
+                            }, 1000);
+                        }, 2000);
                     }, 1000);
                 }, 2000);
+
             }
         });
     </script>
-    
-    
-
 </body>
 </html>
