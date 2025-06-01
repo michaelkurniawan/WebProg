@@ -6,12 +6,12 @@ use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
-
     private $members = [
         [
             'name' => 'Angelina Joyvina C S',
             'student_id' => '2702363733',
             'class' => 'PPTI 18',
+            'role' => 'UI/UX designer',  
             'gallery' => [
                 '/image/nana/1.jpg',
                 '/image/nana/2.jpg',
@@ -20,12 +20,13 @@ class TeamController extends Controller
                 '/image/nana/5.jpg',
             ],
             'alt' => 'angelina-joyvina',
-            'description' => "Baik, tidak sombong, suka menabung, suka makan, suka tidur"
+            'description' => "Baik, tidak sombong, suka menabung, suka makan, suka tidur"
         ],
         [
             'name' => 'Arya Maulana S',
             'student_id' => '2702363746',
             'class' => 'PPTI 18',
+            'role' => 'Frontend Developer',
             'gallery' => [
                 '/image/arya/1.jpg',
                 '/image/arya/2.jpg',
@@ -40,6 +41,7 @@ class TeamController extends Controller
             'name' => 'Fransiska Fu',
             'student_id' => '2702363891',
             'class' => 'PPTI 18',
+            'role' => 'UI/UX designer',
             'gallery' => [
                 '/image/siska/1.jpg',
                 '/image/siska/2.jpg',
@@ -48,12 +50,13 @@ class TeamController extends Controller
                 '/image/siska/5.jpg',
             ],
             'alt' => 'fransiska-fu',
-            'description' => "Anggota perempuan PPTI 18 yang baik hati, ramah, dan suka menabung :D"
+            'description' => "Anggota perempuan PPTI 18 yang baik hati, ramah, dan suka menabung :D"
         ],
         [
             'name' => 'Michael Kurniawan',
             'student_id' => '2702363992',
             'class' => 'PPTI 18',
+            'role' => 'Fullstack Developer',
             'gallery' => [
                 '/image/mikel/1.jpg',
                 '/image/mikel/2.jpeg',
@@ -62,12 +65,13 @@ class TeamController extends Controller
                 '/image/mikel/5.jpg',
             ],
             'alt' => 'michael-kurniawan',
-            'description' => "I'm a Computer Science student at BINUS University and scholarship awardee of the PPTI BCA program — a prestigious CSR initiative by Bank Central Asia focused on developing future IT leaders."
+            'description' => "I'm a Computer Science student at BINUS University and scholarship awardee of the PPTI BCA program."
         ],
         [
             'name' => 'Yosua Sugihartono',
             'student_id' => '2702364276',
             'class' => 'PPTI 18',
+            'role' => 'Backend Developer',
             'gallery' => [
                 '/image/yos/1.jpg',
                 '/image/yos/2.jpg',
@@ -80,16 +84,34 @@ class TeamController extends Controller
         ]
     ];
 
-    public function index(){
-        return view('team', ['members' => $this->members]);
+    public function index(Request $request){
+        $role = $request->query('role', 'all');
+        $request->session()->put('lastRole', $role);
+
+        if ($role === 'all') {
+            $filteredMembers = $this->members;
+        } else {
+            $filteredMembers = array_filter($this->members, function ($member) use ($role) {
+                return strtolower($member['role']) === strtolower($role);
+            });
+        }
+
+        return view('team', [
+            'members' => $filteredMembers,
+            'selectedRole' => $role,
+            'allMembers' => $this->members, // untuk ambil semua role dropdown
+        ]);
     }
 
-    public function show($alt){
+    public function show(Request $request, $alt){
         $member = collect($this->members)->firstWhere('alt', $alt);
         if(!$member) {
             abort(404);
         }
 
-        return view('teamDetail', ['member' => $member]);
+        // Ambil lastRole dari session untuk tombol back
+        $lastRole = $request->session()->get('lastRole', 'all');
+
+        return view('teamDetail', ['member' => $member, 'lastRole' => $lastRole]);
     }
 }
