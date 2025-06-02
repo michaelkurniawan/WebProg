@@ -78,8 +78,8 @@
                             />
                         </div>
                         <h3 class="text-xl font-bold text-gray-800 raleway">{{ $member['name'] }}</h3>
-                        <p class="text-sm text-gray-500 raleway">Role: {{ $member['role'] }}</p>
-                        <p class="text-sm text-gray-500 raleway">ID: {{ $member['student_id'] }}</p>
+                        <p class="text-sm text-gray-500 raleway">{{ $member['role'] }}</p>
+                        <p class="text-sm text-gray-500 raleway">NIM: {{ $member['student_id'] }}</p>
                     </div>
                 </a>
             @endif
